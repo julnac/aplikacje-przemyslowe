@@ -1,12 +1,14 @@
+package model;
+
 public class Worker {
     private String name;
     private String surname;
     private String email;
     private Position position;
-    private Company company;
+    private String company;
     private double salary;
 
-    public Worker(String name, String surname, String email, Position position, Company company) {
+    public Worker(String name, String surname, String email, Position position, String company) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -25,7 +27,7 @@ public class Worker {
     public Position getPosition() {
         return position;
     }
-    public String getCompany() { return company.getName();}
+    public String getCompany() { return company;}
     public double getSalary() {
         return salary;
     }
@@ -40,10 +42,9 @@ public class Worker {
     public void setPosition(Position position) {
         this.position = position;
     }
-    public void setCompany(Company company) { this.company = company;}
+    public void setCompany(String company) { this.company = company;}
     public void setSalary(double salary) { this.salary = salary;}
 
-    public Company getCompanyObject() { return company; }
 
     @Override
     public boolean equals(Object o){
@@ -60,7 +61,7 @@ public class Worker {
 
     @Override
     public String toString(){
-        return "Worker{name='" + name + "', surname='" + surname + "', email='" + email + "', position=" + position + ", company=" + company.getName() + ", salary=" + salary + "}";
+        return "model.Worker{name='" + name + "', surname='" + surname + "', email='" + email + "', position=" + position + ", company=" + company + ", salary=" + salary + "}";
     }
 
 }

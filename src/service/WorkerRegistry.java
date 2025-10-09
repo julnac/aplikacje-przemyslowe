@@ -1,28 +1,31 @@
+package service;
+
+import model.Position;
+import model.Worker;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class WorkerRegistry {
-    private List<Worker> allWorkers = new ArrayList<>();
+    private HashMap<String, Worker> workerMap = new HashMap<>();
 
 //    zarzadzanie pracownikami
 
     public void addWorker(Worker worker) {
-        boolean exists = allWorkers.stream().anyMatch(w -> w.getEmail().equals(worker.getEmail()));
+        boolean exists = workerMap.containsKey(worker.getEmail());
         if (exists) {
             System.out.println("Pracownik z mailem " + worker.getEmail() + " już istnieje!");
         } else {
-            allWorkers.add(worker);
-            worker.getCompanyObject().addWorker(worker);
+            workerMap.put(worker.getEmail(), worker);
         }
     }
 
     public void removeWorker(Worker worker) {
-        allWorkers.remove(worker);
-        worker.getCompanyObject().removeWorker(worker);
+        workerMap.remove(worker.getEmail());
     }
 
     public List<Worker> getAllWorkers() {
-        return allWorkers;
+        return workerMap.values().stream().toList();
     }
 
 
@@ -66,19 +69,6 @@ public class WorkerRegistry {
     public static Optional<Worker> highestPaid(List<Worker> workers) {
         return workers.stream()
                 .max(Comparator.comparingDouble(Worker::getSalary));
-    }
-
-    @Override
-    public String toString() {
-        return "WorkerRegistry{allWorkers=" + allWorkers + "}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WorkerRegistry)) return false;
-        WorkerRegistry that = (WorkerRegistry) o;
-        return allWorkers.equals(that.allWorkers);
     }
 
 }
