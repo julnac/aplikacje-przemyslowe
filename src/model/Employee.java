@@ -1,6 +1,6 @@
 package model;
 
-public class Worker {
+public class Employee {
     private String name;
     private String surname;
     private String email;
@@ -8,7 +8,7 @@ public class Worker {
     private String company;
     private double salary;
 
-    public Worker(String name, String surname, String email, Position position, String company) {
+    public Employee(String name, String surname, String email, Position position, String company) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -49,8 +49,8 @@ public class Worker {
     @Override
     public boolean equals(Object o){
         if(this == o) return true;
-        if(!(o instanceof Worker)) return false;
-        Worker worker = (Worker) o;
+        if(!(o instanceof Employee)) return false;
+        Employee worker = (Employee) o;
         return email.equals(worker.email);
     }
 

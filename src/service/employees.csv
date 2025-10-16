@@ -1,0 +1,6 @@
+firstName,lastName,email,company,position,salary
+Jan,Kowalski,jan.kowalski@firma.pl,ABC Corp,MANAGER,12000
+Ewa,Nowak,ewa.nowak@firma.pl,TechCorp,PROGRAMISTA,8000
+Andrzej,Wiśniewski,andrzej.wisniewski@firma.pl,TechCorp,PREZES,20000
+
+Andrzej,Wiśniewski,andrzej.wisniewski@firma.pl,TechCorp,PAPUGA,20000
