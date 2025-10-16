@@ -31,6 +31,6 @@ public class ImportSummary {
 
     @Override
     public String toString() {
-        return "Zaimportowano: " + importedCount + ", błędy: " + errors.size();
+        return "Zaimportowano: " + importedCount + ", błędy: " + errors;
     }
 }

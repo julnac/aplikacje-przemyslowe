@@ -17,7 +17,7 @@ public class Main {
             var employees = apiService.fetchEmployeesFromApi("https://jsonplaceholder.typicode.com/users");
             employees.forEach(registry::addEmployee);
         } catch (ApiException e) {
-            System.err.println("❌ Błąd pobierania danych: " + e.getMessage());
+            System.err.println("Błąd pobierania danych: " + e.getMessage());
         }
 //
 //        // pracownicy
