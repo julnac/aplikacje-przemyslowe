@@ -1,4 +1,4 @@
-package model;
+package employeeSystem.model;
 
 public class Employee {
     private String name;
@@ -61,7 +61,7 @@ public class Employee {
 
     @Override
     public String toString(){
-        return "model.Worker{name='" + name + "', surname='" + surname + "', email='" + email + "', position=" + position + ", company=" + company + ", salary=" + salary + "}";
+        return "employeeSystem.model.Worker{name='" + name + "', surname='" + surname + "', email='" + email + "', position=" + position + ", company=" + company + ", salary=" + salary + "}";
     }
 
 }

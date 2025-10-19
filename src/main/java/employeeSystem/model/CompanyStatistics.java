@@ -1,4 +1,4 @@
-package model;
+package employeeSystem.model;
 
 public class CompanyStatistics {
     private String companyName;

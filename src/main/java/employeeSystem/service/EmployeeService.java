@@ -1,8 +1,8 @@
-package service;
+package employeeSystem.service;
 
-import model.CompanyStatistics;
-import model.Position;
-import model.Employee;
+import employeeSystem.model.CompanyStatistics;
+import employeeSystem.model.Position;
+import employeeSystem.model.Employee;
 
 import java.util.*;
 import java.util.stream.Collectors;

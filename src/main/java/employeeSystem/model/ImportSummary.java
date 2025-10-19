@@ -1,6 +1,4 @@
-package model;
-
-import service.ImportService;
+package employeeSystem.model;
 
 import java.util.List;
 

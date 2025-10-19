@@ -1,8 +1,10 @@
-import exception.ApiException;
-import model.Employee;
-import service.ApiService;
-import service.EmployeeService;
-import service.ImportService;
+package employeeSystem;
+
+import employeeSystem.exception.ApiException;
+import employeeSystem.model.Employee;
+import employeeSystem.service.ApiService;
+import employeeSystem.service.EmployeeService;
+import employeeSystem.service.ImportService;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class Main {
 //        registry.addEmployee(w6);
 
         ImportService importer = new ImportService(registry);
-        var summary = importer.importFromCsv("src/service/employees.csv");
+        var summary = importer.importFromCsv("src/main/java/employeeSystem.service/employees.csv");
         System.out.println(summary);
 
         System.out.println("\n=== Wszyscy pracownicy w systemie ===");

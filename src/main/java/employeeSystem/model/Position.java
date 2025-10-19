@@ -1,4 +1,4 @@
-package model;
+package employeeSystem.model;
 
 public enum Position {
     PREZES(25000, 1),

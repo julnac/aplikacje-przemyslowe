@@ -1,9 +1,9 @@
-package service;
+package employeeSystem.service;
 
 import com.google.gson.*;
-import exception.ApiException;
-import model.Employee;
-import model.Position;
+import employeeSystem.exception.ApiException;
+import employeeSystem.model.Employee;
+import employeeSystem.model.Position;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,12 +15,23 @@ import java.util.List;
 
 public class ApiService {
 
+    private final HttpClient httpClient;
+
+    public ApiService() {
+        this.httpClient = HttpClient.newHttpClient();
+    }
+
+    // konstruktor testowy
+    public ApiService(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
     public List<Employee> fetchEmployeesFromApi(String apiUrl) throws ApiException {
         List<Employee> employees = new ArrayList<>();
 
         try {
             // 🔹 Tworzymy klienta HTTP (Java 11+)
-            HttpClient client = HttpClient.newHttpClient();
+            // HttpClient client = HttpClient.newHttpClient();
 
             // 🔹 Przygotowujemy żądanie GET
             HttpRequest request = HttpRequest.newBuilder()
@@ -29,7 +40,7 @@ public class ApiService {
                     .build();
 
             // 🔹 Wykonujemy żądanie
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
                 throw new ApiException("Błąd HTTP: " + response.statusCode());
@@ -79,4 +90,4 @@ public class ApiService {
 }
 
 //uwaga!
-//model.Worker{name='Mrs.', surname='Dennis Schulist', email='Karley_Dach@jasper.info', position=PROGRAMISTA, company=Considine-Lockman, salary=8000.0}
+//employeeSystem.model.Worker{name='Mrs.', surname='Dennis Schulist', email='Karley_Dach@jasper.info', position=PROGRAMISTA, company=Considine-Lockman, salary=8000.0}
