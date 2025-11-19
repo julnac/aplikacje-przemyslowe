@@ -3,12 +3,19 @@ package employeeSystem.service;
 import employeeSystem.model.CompanyStatistics;
 import employeeSystem.model.Position;
 import employeeSystem.model.Employee;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class EmployeeService {
     private HashMap<String, Employee> employeesMap = new HashMap<>();
+
+    public EmployeeService() {
+        this.employeesMap = new HashMap<>();
+        System.out.println("Employee service has been created by Spring!");
+    }
 
 //    zarzadzanie pracownikami
 

@@ -13,45 +13,46 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
 public class ApiService {
 
+    private final String apiUrl;
     private final HttpClient httpClient;
+    private final Gson gson;
 
-    public ApiService() {
-        this.httpClient = HttpClient.newHttpClient();
-    }
-
-    // konstruktor testowy
-    public ApiService(HttpClient httpClient) {
+    public ApiService(
+            @Value("${app.api.url}") String apiUrl,
+            HttpClient httpClient,
+            Gson gson
+    ) {
+        this.apiUrl = apiUrl;
         this.httpClient = httpClient;
+        this.gson = gson;
+        System.out.println("ApiService initialized with URL: " + apiUrl);
     }
 
-    public List<Employee> fetchEmployeesFromApi(String apiUrl) throws ApiException {
+
+    public List<Employee> fetchEmployeesFromApi() throws ApiException {
         List<Employee> employees = new ArrayList<>();
 
         try {
-            // 🔹 Tworzymy klienta HTTP (Java 11+)
-            // HttpClient client = HttpClient.newHttpClient();
-
-            // 🔹 Przygotowujemy żądanie GET
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(apiUrl))
                     .GET()
                     .build();
 
-            // 🔹 Wykonujemy żądanie
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
                 throw new ApiException("Błąd HTTP: " + response.statusCode());
             }
 
-            String jsonResponse = response.body();
+            JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
 
-            // 🔹 Parsowanie JSON przy użyciu Gson (JsonArray)
-            JsonArray jsonArray = JsonParser.parseString(jsonResponse).getAsJsonArray();
-
-            for (JsonElement element : jsonArray) {
+            for (JsonElement element : array) {
                 JsonObject obj = element.getAsJsonObject();
 
                 // name (np. "Leanne Graham")
@@ -67,16 +68,15 @@ public class ApiService {
                 String companyName = obj.getAsJsonObject("company").get("name").getAsString();
 
                 // tworzymy pracownika
-                Employee emp = new Employee(
+                employees.add(new Employee (
                         firstName,
                         lastName,
                         email,
                         Position.PROGRAMISTA,
                         companyName
                         // Position.PROGRAMISTA.getBaseSalary() // np. 8000.0
-                );
+                ));
 
-                employees.add(emp);
             }
 
         } catch (IOException | InterruptedException e) {

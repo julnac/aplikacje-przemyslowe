@@ -9,21 +9,32 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+
+@Service
 public class ImportService {
 
     private final EmployeeService employeeService;
+    private final String csvFilePath;
 
-    public ImportService(EmployeeService employeeService) {
+    public ImportService(
+            EmployeeService employeeService,
+            @Value("${app.import.csv-file}") String csvFilePath
+            ) {
         this.employeeService = employeeService;
+        this.csvFilePath = csvFilePath;
+        System.out.println("Import service has been created by Spring!");
     }
 
-    public ImportSummary importFromCsv (String filePath) {
+    public ImportSummary importFromCsv () {
         int importedCount = 0;
         List<String> errors = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             int lineNumber = 0;
 
