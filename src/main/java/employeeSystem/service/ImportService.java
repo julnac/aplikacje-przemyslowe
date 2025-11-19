@@ -11,9 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.InputStreamReader;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+
 
 @Service
 public class ImportService {
@@ -34,55 +37,64 @@ public class ImportService {
         int importedCount = 0;
         List<String> errors = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
-            String line;
-            int lineNumber = 0;
+        try{
+            // usuwamy prefix "classpath:" jeśli jest
+            String path = csvFilePath.replace("classpath:", "");
 
-            // pominięcie nagłówka
-            reader.readLine();
-            lineNumber++;
+            ClassPathResource resource = new ClassPathResource(path);
 
-            while ((line = reader.readLine()) != null) {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(resource.getInputStream())
+            )) {
+                String line;
+                int lineNumber = 0;
+
+                // pominięcie nagłówka
+                reader.readLine();
                 lineNumber++;
-                if (line.trim().isEmpty()) continue;
 
-                try {
-                    String[] parts = line.split(",");
+                while ((line = reader.readLine()) != null) {
+                    lineNumber++;
+                    if (line.trim().isEmpty()) continue;
 
-                    if (parts.length != 6) {
-                        throw new InvalidDataException("Niepoprawna liczba kolumn (" + parts.length + ")");
-                    }
-
-                    String firstName = parts[0].trim();
-                    String lastName = parts[1].trim();
-                    String email = parts[2].trim();
-                    String company = parts[3].trim();
-                    String positionStr = parts[4].trim();
-                    String salaryStr = parts[5].trim();
-
-                    // walidacja stanowiska
-                    Position position;
                     try {
-                        position = Position.valueOf(positionStr.toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        throw new InvalidDataException("Nieznane stanowisko: " + positionStr);
+                        String[] parts = line.split(",");
+
+                        if (parts.length != 6) {
+                            throw new InvalidDataException("Niepoprawna liczba kolumn (" + parts.length + ")");
+                        }
+
+                        String firstName = parts[0].trim();
+                        String lastName = parts[1].trim();
+                        String email = parts[2].trim();
+                        String company = parts[3].trim();
+                        String positionStr = parts[4].trim();
+                        String salaryStr = parts[5].trim();
+
+                        // walidacja stanowiska
+                        Position position;
+                        try {
+                            position = Position.valueOf(positionStr.toUpperCase());
+                        } catch (IllegalArgumentException e) {
+                            throw new InvalidDataException("Nieznane stanowisko: " + positionStr);
+                        }
+
+                        //walidacja pensji
+                        double salary;
+                        try {
+                            salary = Double.parseDouble(salaryStr);
+                            if (salary <= 0) throw new InvalidDataException("Wynagrodzenie musi byc dodatnie");
+                        } catch (NumberFormatException e) {
+                            throw new InvalidDataException("Niepoprawny format wynagrodzenia: " + salaryStr);
+                        }
+
+                        Employee emp = new Employee(firstName, lastName, email, position, company);
+                        employeeService.addEmployee(emp);
+                        importedCount++;
+
+                    } catch (InvalidDataException e) {
+                        errors.add("Linia " + lineNumber + ": " + e.getMessage());
                     }
-
-                    //walidacja pensji
-                    double salary;
-                    try {
-                        salary = Double.parseDouble(salaryStr);
-                        if (salary <= 0) throw new InvalidDataException("Wynagrodzenie musi byc dodatnie");
-                    } catch (NumberFormatException e){
-                        throw new InvalidDataException("Niepoprawny format wynagrodzenia: " + salaryStr);
-                    }
-
-                    Employee emp = new Employee(firstName, lastName, email, position, company);
-                    employeeService.addEmployee(emp);
-                    importedCount++;
-
-                } catch (InvalidDataException e) {
-                    errors.add("Linia " + lineNumber + ": " + e.getMessage());
                 }
             }
         } catch(IOException e) {
